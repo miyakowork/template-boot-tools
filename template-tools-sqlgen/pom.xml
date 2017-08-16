@@ -10,13 +10,8 @@
     <artifactId>template-tools-sqlgen</artifactId>
     <packaging>jar</packaging>
 
-    <name>template-tools-sqlgen</name>
-    <url>http://maven.apache.org</url>
+    <name>template-utils-sqlgen</name>
+    <url>https://wuwenbin.me</url>
+    <description>提供生成SQL两种便利途径</description>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
-
-    <dependencies>
-    </dependencies>
 </project>
