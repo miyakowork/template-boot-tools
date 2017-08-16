@@ -6,7 +6,7 @@
 
     <groupId>me.wuwenbin</groupId>
     <artifactId>template-boot-tools</artifactId>
-    <version>0.0.1.RELEASE</version>
+    <version>1.0.0.RELEASE</version>
     <modules>
         <module>template-tools-sqlgen</module>
     </modules>
@@ -18,6 +18,9 @@
         <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
     </properties>
 
+    <name>template-boot-tools</name>
+    <url>https://wuwenbin.me</url>
+    <description>template框架工具类集合工程</description>
 
     <developers>
         <developer>
@@ -28,8 +31,8 @@
     </developers>
 
     <scm>
-        <url>https://github.com/miyakowork/template-utils-sql</url>
-        <connection>git@github.com:miyakowork/template-utils-sql.git</connection>
+        <url>https://github.com/miyakowork/template-boot-tools</url>
+        <connection>git@github.com:miyakowork/template-boot-tools.git</connection>
         <developerConnection>https://wuwenbin.me</developerConnection>
     </scm>
 

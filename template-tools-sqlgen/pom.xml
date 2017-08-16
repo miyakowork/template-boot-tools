@@ -3,7 +3,7 @@
     <parent>
         <artifactId>template-boot-tools</artifactId>
         <groupId>me.wuwenbin</groupId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>1.0.0.RELEASE</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -11,7 +11,7 @@
     <packaging>jar</packaging>
 
     <name>template-utils-sqlgen</name>
-    <url>https://wuwenbin.me</url>
+    <url>https://github.com/miyakowork/template-boot-tools/tree/master/template-tools-sqlgen</url>
     <description>提供生成SQL两种便利途径</description>
 
 </project>

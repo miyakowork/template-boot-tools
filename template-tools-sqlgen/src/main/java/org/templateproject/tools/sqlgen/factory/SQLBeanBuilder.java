@@ -53,7 +53,7 @@ public final class SQLBeanBuilder {
         if (!SQLBuilderUtils.SQLTableIsExist(beanClass))
             throw new SQLTableNotFoundException(beanClass);
         else
-            return beanClass.getAnnotation(sqlTableClass).value();
+            return SQLDefineUtils.java2SQL(beanClass.getAnnotation(sqlTableClass).value(), beanClass.getSimpleName());
     }
 
     /**
