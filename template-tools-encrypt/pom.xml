@@ -7,11 +7,16 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>template-tools-sqlgen</artifactId>
+    <artifactId>template-tools-encrypt</artifactId>
     <packaging>jar</packaging>
 
-    <name>template-utils-sqlgen</name>
-    <url>https://github.com/miyakowork/template-boot-tools/tree/master/template-tools-sqlgen</url>
-    <description>提供生成SQL两种便利途径</description>
+    <name>template-tools-encrypt</name>
+    <url>http://maven.apache.org</url>
 
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <dependencies>
+    </dependencies>
 </project>

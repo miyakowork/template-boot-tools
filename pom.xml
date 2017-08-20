@@ -6,9 +6,11 @@
 
     <groupId>me.wuwenbin</groupId>
     <artifactId>template-boot-tools</artifactId>
-    <version>1.0.0.RELEASE</version>
+    <version>1.0.1.RELEASE</version>
     <modules>
         <module>template-tools-sqlgen</module>
+        <module>template-tools-encrypt</module>
+        <module>template-tools-util</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -43,6 +45,14 @@
             <distribution>repo</distribution>
         </license>
     </licenses>
+
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+        </dependency>
+    </dependencies>
 
     <build>
         <plugins>
