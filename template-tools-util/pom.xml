@@ -11,20 +11,15 @@
     <packaging>jar</packaging>
 
     <name>template-tools-util</name>
-    <url>http://maven.apache.org</url>
-
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
+    <url>https://github.com/miyakowork/template-boot-tools/tree/master/template-tools-util</url>
+    <description>常用操作工具类集合</description>
 
     <dependencies>
-
         <dependency>
             <groupId>com.belerweb</groupId>
             <artifactId>pinyin4j</artifactId>
             <version>2.5.0</version>
         </dependency>
-
         <dependency>
             <groupId>dom4j</groupId>
             <artifactId>dom4j</artifactId>
