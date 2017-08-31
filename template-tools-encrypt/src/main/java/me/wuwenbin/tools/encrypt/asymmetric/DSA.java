@@ -5,7 +5,7 @@ package me.wuwenbin.tools.encrypt.asymmetric;
  *
  * @author Looly
  */
-public class DSA extends AsymmetricCriptor {
+public class DSA extends AsymmetricEncryption {
 
     private static final AsymmetricAlgorithm ALGORITHM_DSA = AsymmetricAlgorithm.DSA;
 

@@ -1,6 +1,6 @@
 package me.wuwenbin.tools.encrypt.asymmetric;
 
-import me.wuwenbin.tools.encrypt.bcd.BCD;
+import me.wuwenbin.tools.encrypt.asymmetric.bcd.BCD;
 import me.wuwenbin.tools.encrypt.exception.EncryptException;
 
 import javax.crypto.Cipher;
@@ -13,7 +13,7 @@ import java.security.interfaces.RSAKey;
  *
  * @author Looly
  */
-public class RSA extends AsymmetricCriptor {
+public class RSA extends AsymmetricEncryption {
 
     private static final AsymmetricAlgorithm ALGORITHM_RSA = AsymmetricAlgorithm.RSA;
 

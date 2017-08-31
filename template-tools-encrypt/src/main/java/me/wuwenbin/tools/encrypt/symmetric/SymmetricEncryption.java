@@ -21,7 +21,7 @@ import java.util.concurrent.locks.ReentrantLock;
  *
  * @author Looly
  */
-public class SymmetricCriptor {
+public class SymmetricEncryption {
 
     /**
      * SecretKey 负责保存对称密钥
@@ -44,7 +44,7 @@ public class SymmetricCriptor {
      *
      * @param algorithm {@link SymmetricAlgorithm}
      */
-    public SymmetricCriptor(SymmetricAlgorithm algorithm) {
+    public SymmetricEncryption(SymmetricAlgorithm algorithm) {
         this(algorithm, null);
     }
 
@@ -53,7 +53,7 @@ public class SymmetricCriptor {
      *
      * @param algorithm 算法
      */
-    public SymmetricCriptor(String algorithm) {
+    public SymmetricEncryption(String algorithm) {
         this(algorithm, null);
     }
 
@@ -63,11 +63,11 @@ public class SymmetricCriptor {
      * @param algorithm {@link SymmetricAlgorithm}
      * @param key       自定义KEY
      */
-    public SymmetricCriptor(SymmetricAlgorithm algorithm, byte[] key) {
+    public SymmetricEncryption(SymmetricAlgorithm algorithm, byte[] key) {
         this(algorithm.getValue(), key);
     }
 
-    public SymmetricCriptor(String algorithm, byte[] key) {
+    public SymmetricEncryption(String algorithm, byte[] key) {
         init(algorithm, key);
     }
     //------------------------------------------------------------------ Constructor end
@@ -77,9 +77,9 @@ public class SymmetricCriptor {
      *
      * @param algorithm 算法
      * @param key       密钥，如果为<code>null</code>自动生成一个key
-     * @return {@link SymmetricCriptor}
+     * @return {@link SymmetricEncryption}
      */
-    public SymmetricCriptor init(String algorithm, byte[] key) {
+    public SymmetricEncryption init(String algorithm, byte[] key) {
         this.secretKey = SecurityUtils.generateKey(algorithm, key);
         if (algorithm.startsWith("PBE")) {
             //对于PBE算法使用随机数加盐

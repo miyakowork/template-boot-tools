@@ -1,4 +1,4 @@
-package me.wuwenbin.tools.encrypt.bcd;
+package me.wuwenbin.tools.encrypt.asymmetric.bcd;
 
 /**
  * BCD码（Binary-Coded Decimal‎）亦称二进码十进数或二-十进制代码<br>

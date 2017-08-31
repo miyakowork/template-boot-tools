@@ -12,15 +12,15 @@ public class Base64 {
     /**
      * 标准编码表
      */
-    private static final byte[] STANDARD_ENCODE_TABLE = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '/'};
+    private final byte[] STANDARD_ENCODE_TABLE = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '/'};
     /**
      * URL安全的编码表，将 + 和 / 替换为 - 和 _
      */
-    private static final byte[] URL_SAFE_ENCODE_TABLE = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '_'};
+    private final byte[] URL_SAFE_ENCODE_TABLE = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '_'};
     /**
      * Base64解码表
      */
-    private static final byte[] DECODE_TABLE = {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 62, -1, 62, -1, 63, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, -1, -1, -1, -1, -1, -1, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, -1, -1, -1, -1, 63, -1, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51};
+    private final byte[] DECODE_TABLE = {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 62, -1, 62, -1, 63, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, -1, -1, -1, -1, -1, -1, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, -1, -1, -1, -1, 63, -1, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51};
 
     // -------------------------------------------------------------------- encode
 
@@ -31,7 +31,7 @@ public class Base64 {
      * @param lineSep 在76个char之后是CRLF还是EOF
      * @return 编码后的bytes
      */
-    public static byte[] encode(byte[] arr, boolean lineSep) {
+    public byte[] encode(byte[] arr, boolean lineSep) {
         return encode(arr, lineSep, false);
     }
 
@@ -44,7 +44,7 @@ public class Base64 {
      * @param isUrlSafe   是否使用URL安全字符，一般为<code>false</code>
      * @return 编码后的bytes
      */
-    public static byte[] encode(byte[] arr, boolean isMultiLine, boolean isUrlSafe) {
+    public byte[] encode(byte[] arr, boolean isMultiLine, boolean isUrlSafe) {
         int len = arr != null ? arr.length : 0;
         if (len == 0) {
             return new byte[0];
@@ -60,10 +60,10 @@ public class Base64 {
         for (int s = 0, d = 0, cc = 0; s < evenlen; ) {
             int i = (arr[s++] & 0xff) << 16 | (arr[s++] & 0xff) << 8 | (arr[s++] & 0xff);
 
-            dest[d++] = (byte) encodeTable[(i >>> 18) & 0x3f];
-            dest[d++] = (byte) encodeTable[(i >>> 12) & 0x3f];
-            dest[d++] = (byte) encodeTable[(i >>> 6) & 0x3f];
-            dest[d++] = (byte) encodeTable[i & 0x3f];
+            dest[d++] = encodeTable[(i >>> 18) & 0x3f];
+            dest[d++] = encodeTable[(i >>> 12) & 0x3f];
+            dest[d++] = encodeTable[(i >>> 6) & 0x3f];
+            dest[d++] = encodeTable[i & 0x3f];
 
             if (isMultiLine && ++cc == 19 && d < destlen - 2) {
                 dest[d++] = '\r';
@@ -76,9 +76,9 @@ public class Base64 {
         if (left > 0) {
             int i = ((arr[evenlen] & 0xff) << 10) | (left == 2 ? ((arr[len - 1] & 0xff) << 2) : 0);
 
-            dest[destlen - 4] = (byte) encodeTable[i >> 12];
-            dest[destlen - 3] = (byte) encodeTable[(i >>> 6) & 0x3f];
-            dest[destlen - 2] = left == 2 ? (byte) encodeTable[i & 0x3f] : (byte) '=';
+            dest[destlen - 4] = encodeTable[i >> 12];
+            dest[destlen - 3] = encodeTable[(i >>> 6) & 0x3f];
+            dest[destlen - 2] = left == 2 ? encodeTable[i & 0x3f] : (byte) '=';
             dest[destlen - 1] = '=';
         }
         return dest;
@@ -90,7 +90,7 @@ public class Base64 {
      * @param source 被编码的base64字符串
      * @return 被加密后的字符串
      */
-    public static String encode(String source) {
+    public String encode(String source) {
         return encode(source, Charset.defaultCharset());
     }
 
@@ -101,7 +101,7 @@ public class Base64 {
      * @param charset 字符集
      * @return 被加密后的字符串
      */
-    public static String encode(String source, String charset) {
+    public String encode(String source, String charset) {
         return encode(getPrivateBytes(source, charset), charset);
     }
 
@@ -112,7 +112,7 @@ public class Base64 {
      * @param charset 字符集
      * @return 被加密后的字符串
      */
-    public static String encode(String source, Charset charset) {
+    public String encode(String source, Charset charset) {
         return encode(getPrivateBytes(source, charset.name()), charset);
     }
 
@@ -122,7 +122,7 @@ public class Base64 {
      * @param source 被编码的base64字符串
      * @return 被加密后的字符串
      */
-    public static String encode(byte[] source) {
+    public String encode(byte[] source) {
         return encode(source, Charset.defaultCharset());
     }
 
@@ -133,7 +133,7 @@ public class Base64 {
      * @param charset 字符集
      * @return 被加密后的字符串
      */
-    public static String encode(byte[] source, String charset) {
+    public String encode(byte[] source, String charset) {
         return getPrivateString(encode(source, false), Charset.forName(charset));
     }
 
@@ -144,7 +144,7 @@ public class Base64 {
      * @param charset 字符集
      * @return 被加密后的字符串
      */
-    public static String encode(byte[] source, Charset charset) {
+    public String encode(byte[] source, Charset charset) {
         return getPrivateString(encode(source, false), charset);
     }
 
@@ -156,7 +156,7 @@ public class Base64 {
      * @param source 被解码的base64字符串
      * @return 被加密后的字符串
      */
-    public static String decodeStr(String source) {
+    public String decodeStr(String source) {
         return decodeStr(source, Charset.defaultCharset());
     }
 
@@ -167,7 +167,7 @@ public class Base64 {
      * @param charset 字符集
      * @return 被加密后的字符串
      */
-    public static String decodeStr(String source, String charset) {
+    public String decodeStr(String source, String charset) {
         return getPrivateString(decode(source, charset), Charset.forName(charset));
     }
 
@@ -178,7 +178,7 @@ public class Base64 {
      * @param charset 字符集
      * @return 被加密后的字符串
      */
-    public static String decodeStr(String source, Charset charset) {
+    public String decodeStr(String source, Charset charset) {
         return getPrivateString(decode(source, charset), charset);
     }
 
@@ -188,7 +188,7 @@ public class Base64 {
      * @param source 被解码的base64字符串
      * @return 被加密后的字符串
      */
-    public static byte[] decode(String source) {
+    public byte[] decode(String source) {
         return decode(source, Charset.defaultCharset());
     }
 
@@ -199,7 +199,7 @@ public class Base64 {
      * @param charset 字符集
      * @return 被加密后的字符串
      */
-    public static byte[] decode(String source, String charset) {
+    public byte[] decode(String source, String charset) {
         return decode(getPrivateBytes(source, charset));
     }
 
@@ -210,7 +210,7 @@ public class Base64 {
      * @param charset 字符集
      * @return 被加密后的字符串
      */
-    public static byte[] decode(String source, Charset charset) {
+    public byte[] decode(String source, Charset charset) {
         return decode(getPrivateBytes(source, charset.name()));
     }
 
@@ -220,7 +220,7 @@ public class Base64 {
      * @param arr byte数组
      * @return 解码后的byte数组
      */
-    public static byte[] decode(byte[] arr) {
+    public byte[] decode(byte[] arr) {
         int length = arr.length;
         if (length == 0) {
             return new byte[0];
@@ -263,7 +263,7 @@ public class Base64 {
         return dest;
     }
 
-    private static byte[] getPrivateBytes(String data, String charsetString) {
+    private byte[] getPrivateBytes(String data, String charsetString) {
         if (data == null) return null;
         Charset charset = charsetString == null || charsetString.length() == 0 || charsetString.trim().length() == 0 ? Charset.defaultCharset() : Charset.forName(charsetString);
         return data.getBytes(charset);

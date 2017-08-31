@@ -1,9 +1,10 @@
 package me.wuwenbin.tools.encrypt.asymmetric;
 
 
-import me.wuwenbin.tools.encrypt.base64.Base64;
+import me.wuwenbin.tools.encrypt.Encrypt;
 import me.wuwenbin.tools.encrypt.exception.EncryptException;
 import me.wuwenbin.tools.encrypt.factory.SecurityUtils;
+import me.wuwenbin.tools.encrypt.symmetric.SymmetricEncryption;
 import me.wuwenbin.tools.encrypt.zsupport.FastByteArrayOutputStream;
 
 import javax.crypto.Cipher;
@@ -22,7 +23,7 @@ import java.util.concurrent.locks.ReentrantLock;
  *
  * @author Looly
  */
-public class AsymmetricCriptor {
+public class AsymmetricEncryption {
 
     /**
      * 算法
@@ -54,7 +55,7 @@ public class AsymmetricCriptor {
      *
      * @param algorithm {@link me.wuwenbin.tools.encrypt.symmetric.SymmetricAlgorithm}
      */
-    public AsymmetricCriptor(AsymmetricAlgorithm algorithm) {
+    public AsymmetricEncryption(AsymmetricAlgorithm algorithm) {
         this(algorithm, null, null);
     }
 
@@ -63,7 +64,7 @@ public class AsymmetricCriptor {
      *
      * @param algorithm 算法
      */
-    public AsymmetricCriptor(String algorithm) {
+    public AsymmetricEncryption(String algorithm) {
         this(algorithm, null, null);
     }
 
@@ -72,11 +73,11 @@ public class AsymmetricCriptor {
      * 私钥和公钥同时为空时生成一对新的私钥和公钥<br>
      * 私钥和公钥可以单独传入一个，如此则只能使用此钥匙来做加密或者解密
      *
-     * @param algorithm  {@link me.wuwenbin.tools.encrypt.symmetric.SymmetricCriptor}
+     * @param algorithm  {@link SymmetricEncryption}
      * @param privateKey 私钥
      * @param publicKey  公钥
      */
-    public AsymmetricCriptor(AsymmetricAlgorithm algorithm, byte[] privateKey, byte[] publicKey) {
+    public AsymmetricEncryption(AsymmetricAlgorithm algorithm, byte[] privateKey, byte[] publicKey) {
         this(algorithm.getValue(), privateKey, publicKey);
     }
 
@@ -90,7 +91,7 @@ public class AsymmetricCriptor {
      * @param privateKey 私钥
      * @param publicKey  公钥
      */
-    public AsymmetricCriptor(String algorithm, byte[] privateKey, byte[] publicKey) {
+    public AsymmetricEncryption(String algorithm, byte[] privateKey, byte[] publicKey) {
         init(algorithm, privateKey, publicKey);
     }
     // ------------------------------------------------------------------ Constructor end
@@ -99,14 +100,14 @@ public class AsymmetricCriptor {
      * 初始化<br>
      * 私钥和公钥同时为空时生成一对新的私钥和公钥<br>
      * 私钥和公钥可以单独传入一个，如此则只能使用此钥匙来做加密或者解密<br>
-     * 签名默认使用MD5摘要算法，如果需要自定义签名算法，调用 {@link AsymmetricCriptor#setSignature(Signature)}设置签名对象
+     * 签名默认使用MD5摘要算法，如果需要自定义签名算法，调用 {@link AsymmetricEncryption#setSignature(Signature)}设置签名对象
      *
      * @param algorithm  算法
      * @param privateKey 私钥
      * @param publicKey  公钥
-     * @return {@link AsymmetricCriptor}
+     * @return {@link AsymmetricEncryption}
      */
-    public AsymmetricCriptor init(String algorithm, byte[] privateKey, byte[] publicKey) {
+    public AsymmetricEncryption init(String algorithm, byte[] privateKey, byte[] publicKey) {
         this.algorithm = algorithm;
         try {
             this.clipher = Cipher.getInstance(algorithm);
@@ -131,7 +132,7 @@ public class AsymmetricCriptor {
     /**
      * 生成公钥和私钥
      */
-    public AsymmetricCriptor initKeys() {
+    public AsymmetricEncryption initKeys() {
         KeyPair keyPair = SecurityUtils.generateKeyPair(this.algorithm);
         this.publicKey = keyPair.getPublic();
         this.privateKey = keyPair.getPrivate();
@@ -288,16 +289,16 @@ public class AsymmetricCriptor {
      * @return 获得公钥
      */
     public String getPublicKeyBase64() {
-        return Base64.encode(getPublicKey().getEncoded());
+        return Encrypt.base64.encode(getPublicKey().getEncoded());
     }
 
     /**
      * 设置公钥
      *
      * @param publicKey 公钥
-     * @return 自身 {@link AsymmetricCriptor}
+     * @return 自身 {@link AsymmetricEncryption}
      */
-    public AsymmetricCriptor setPublicKey(PublicKey publicKey) {
+    public AsymmetricEncryption setPublicKey(PublicKey publicKey) {
         this.publicKey = publicKey;
         return this;
     }
@@ -317,16 +318,16 @@ public class AsymmetricCriptor {
      * @return 获得私钥
      */
     public String getPrivateKeyBase64() {
-        return Base64.encode(getPrivateKey().getEncoded());
+        return Encrypt.base64.encode(getPrivateKey().getEncoded());
     }
 
     /**
      * 设置私钥
      *
      * @param privateKey 私钥
-     * @return 自身 {@link AsymmetricCriptor}
+     * @return 自身 {@link AsymmetricEncryption}
      */
-    public AsymmetricCriptor setPrivateKey(PrivateKey privateKey) {
+    public AsymmetricEncryption setPrivateKey(PrivateKey privateKey) {
         this.privateKey = privateKey;
         return this;
     }
@@ -344,9 +345,9 @@ public class AsymmetricCriptor {
      * 设置签名
      *
      * @param signature 签名对象 {@link Signature}
-     * @return 自身 {@link AsymmetricCriptor}
+     * @return 自身 {@link AsymmetricEncryption}
      */
-    public AsymmetricCriptor setSignature(Signature signature) {
+    public AsymmetricEncryption setSignature(Signature signature) {
         this.signature = signature;
         return this;
     }

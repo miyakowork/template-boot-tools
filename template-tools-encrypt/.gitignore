@@ -7,7 +7,3 @@
 *.iml
 out
 gen
-/template-tools-sqlgen/target/
-.gitignore
-src/test/
-target/

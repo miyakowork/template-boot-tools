@@ -7,7 +7,7 @@ import me.wuwenbin.tools.encrypt.digest.HMac;
 import me.wuwenbin.tools.encrypt.digest.HmacAlgorithm;
 import me.wuwenbin.tools.encrypt.exception.EncryptException;
 import me.wuwenbin.tools.encrypt.symmetric.SymmetricAlgorithm;
-import me.wuwenbin.tools.encrypt.symmetric.SymmetricCriptor;
+import me.wuwenbin.tools.encrypt.symmetric.SymmetricEcryption;
 
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
@@ -350,15 +350,15 @@ public class SecurityUtils {
     // ------------------------------------------------------------------- 对称加密算法
 
     /**
-     * AES加密，生成随机KEY。注意解密时必须使用相同 {@link me.wuwenbin.tools.encrypt.symmetric.SymmetricCriptor}对象或者使用相同KEY<br>
+     * AES加密，生成随机KEY。注意解密时必须使用相同 {@link SymmetricEcryption}对象或者使用相同KEY<br>
      * 例：<br>
      * AES加密：aes().encrypt(data)<br>
      * AES解密：aes().decrypt(data)<br>
      *
-     * @return {@link SymmetricCriptor}
+     * @return {@link SymmetricEcryption}
      */
-    public static SymmetricCriptor aes() {
-        return new SymmetricCriptor(SymmetricAlgorithm.AES);
+    public static SymmetricEcryption aes() {
+        return new SymmetricEcryption(SymmetricAlgorithm.AES);
     }
 
     /**
@@ -368,22 +368,22 @@ public class SecurityUtils {
      * AES解密：aes(key).decrypt(data)<br>
      *
      * @param key 密钥
-     * @return {@link SymmetricCriptor}
+     * @return {@link SymmetricEcryption}
      */
-    public static SymmetricCriptor aes(byte[] key) {
-        return new SymmetricCriptor(SymmetricAlgorithm.AES, key);
+    public static SymmetricEcryption aes(byte[] key) {
+        return new SymmetricEcryption(SymmetricAlgorithm.AES, key);
     }
 
     /**
-     * DES加密，生成随机KEY。注意解密时必须使用相同 {@link SymmetricCriptor}对象或者使用相同KEY<br>
+     * DES加密，生成随机KEY。注意解密时必须使用相同 {@link SymmetricEcryption}对象或者使用相同KEY<br>
      * 例：<br>
      * DES加密：des().encrypt(data)<br>
      * DES解密：des().decrypt(data)<br>
      *
-     * @return {@link SymmetricCriptor}
+     * @return {@link SymmetricEcryption}
      */
-    public static SymmetricCriptor des() {
-        return new SymmetricCriptor(SymmetricAlgorithm.DES);
+    public static SymmetricEcryption des() {
+        return new SymmetricEcryption(SymmetricAlgorithm.DES);
     }
 
     /**
@@ -393,10 +393,10 @@ public class SecurityUtils {
      * DES解密：des(key).decrypt(data)<br>
      *
      * @param key 密钥
-     * @return {@link SymmetricCriptor}
+     * @return {@link SymmetricEcryption}
      */
-    public static SymmetricCriptor des(byte[] key) {
-        return new SymmetricCriptor(SymmetricAlgorithm.DES, key);
+    public static SymmetricEcryption des(byte[] key) {
+        return new SymmetricEcryption(SymmetricAlgorithm.DES, key);
     }
 
     // ------------------------------------------------------------------- 摘要算法

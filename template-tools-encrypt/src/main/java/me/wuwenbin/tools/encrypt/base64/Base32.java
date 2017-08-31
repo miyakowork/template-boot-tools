@@ -8,8 +8,8 @@ package me.wuwenbin.tools.encrypt.base64;
  */
 public class Base32 {
 
-    private static final String base32Chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
-    private static final int[] base32Lookup = {//
+    private final String base32Chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
+    private final int[] base32Lookup = {//
             0xFF, 0xFF, 0x1A, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F, // '0', '1', '2', '3', '4', '5', '6', '7'
             0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, // '8', '9', ':', ';', '<', '=', '>', '?'
             0xFF, 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, // '@', 'A', 'B', 'C', 'D', 'E', 'F', 'G'
@@ -28,7 +28,7 @@ public class Base32 {
      * @param bytes 数据
      * @return base32
      */
-    public static String encode(final byte[] bytes) {
+    public String encode(final byte[] bytes) {
         int i = 0, index = 0, digit = 0;
         int currByte, nextByte;
         StringBuffer base32 = new StringBuffer((bytes.length + 7) * 8 / 5);
@@ -68,7 +68,7 @@ public class Base32 {
      * @param base32 base32编码
      * @return 数据
      */
-    public static byte[] decode(final String base32) {
+    public byte[] decode(final String base32) {
         int i, index, lookup, offset, digit;
         byte[] bytes = new byte[base32.length() * 5 / 8];
 
