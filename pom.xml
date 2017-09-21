@@ -11,6 +11,7 @@
         <module>template-tools-sqlgen</module>
         <module>template-tools-encrypt</module>
         <module>template-tools-util</module>
+        <module>template-tools-http</module>
     </modules>
     <packaging>pom</packaging>
 
