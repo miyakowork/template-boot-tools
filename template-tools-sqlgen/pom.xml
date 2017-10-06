@@ -8,6 +8,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>template-tools-sqlgen</artifactId>
+    <version>1.0.3.RELEASE</version>
     <packaging>jar</packaging>
 
     <name>template-utils-sqlgen</name>
