@@ -3,6 +3,7 @@ package me.wuwenbin.tools.sqlgen.factory;
 
 import me.wuwenbin.tools.sqlgen.annotation.SQLColumn;
 import me.wuwenbin.tools.sqlgen.annotation.SQLTable;
+import me.wuwenbin.tools.sqlgen.annotation.support.Condition;
 import me.wuwenbin.tools.sqlgen.exception.*;
 import me.wuwenbin.tools.sqlgen.util.SQLBuilderUtils;
 import me.wuwenbin.tools.sqlgen.util.SQLDefineUtils;
@@ -47,7 +48,6 @@ public final class SQLBeanBuilder {
      * 获取当前SQLTable中的表名
      *
      * @return 表名
-     * @throws SQLTableNotFoundException SQLTableNotFoundException
      */
     public String getTableName() {
         if (!SQLBuilderUtils.SQLTableIsExist(beanClass))
@@ -60,7 +60,6 @@ public final class SQLBeanBuilder {
      * 获取主键变量
      *
      * @return 字段名
-     * @throws PkFieldNotFoundException PkFieldNotFoundException
      */
     public Field getPkField() {
         Field[] fields = SQLBuilderUtils.getAllFieldsExceptObject(beanClass);
@@ -86,6 +85,7 @@ public final class SQLBeanBuilder {
     public Field[] getAllFieldExceptObject() {
         return SQLBuilderUtils.getAllFieldsExceptObject(beanClass);
     }
+
 
     /**
      * 无条件统计
@@ -116,7 +116,7 @@ public final class SQLBeanBuilder {
             StringBuilder sb = new StringBuilder(selectPre);
             sb.append("COUNT(*)").append(FROM).append(tableName);
 
-            if (routers != null && routers.length > 0) {
+            if (SQLBuilderUtils.routerIsNotEmpty(routers)) {
                 sb.append(WHERE).append("1=1");
                 Field[] fields = SQLBuilderUtils.getAllFieldsExceptObject(beanClass);
                 assembleCountSQL(sb, fields, AND, tableName, routers);
@@ -140,7 +140,7 @@ public final class SQLBeanBuilder {
             StringBuilder sb = new StringBuilder(selectPre);
             sb.append("COUNT(*)").append(FROM).append(tableName);
 
-            if (routers != null && routers.length > 0) {
+            if (SQLBuilderUtils.routerIsNotEmpty(routers)) {
                 sb.append(WHERE).append("1<>1");
                 Field[] fields = SQLBuilderUtils.getAllFieldsExceptObject(beanClass);
                 assembleCountSQL(sb, fields, " OR ", tableName, routers);
@@ -167,7 +167,7 @@ public final class SQLBeanBuilder {
             assembleSelectSQL(selectColumnsRouters, tableName, sb, fields);
 
             sb.append(FROM).append(tableName);
-            if (conditionRouters != null && conditionRouters.length > 0) {
+            if (SQLBuilderUtils.routerIsNotEmpty(conditionRouters)) {
                 sb.append(WHERE).append("1=1");
                 assembleCountSQL(sb, fields, AND, tableName, conditionRouters);
             }
@@ -258,7 +258,7 @@ public final class SQLBeanBuilder {
             sb.append(tableName);
 
             StringBuilder values = new StringBuilder("(");
-            if (routers != null && routers.length > 0) {
+            if (SQLBuilderUtils.routerIsNotEmpty(routers)) {
                 sb.append("(");
                 for (Field field : fields) {
                     if (field.isAnnotationPresent(sqlColumnClass)) {
@@ -267,10 +267,13 @@ public final class SQLBeanBuilder {
                             values.append(":").append(field.getName()).append(", ");
                             sb.append(pkColumn).append(", ");
                         }
-                        if (SQLBuilderUtils.fieldRoutersInParamRouters(field.getAnnotation(sqlColumnClass).routers(), routers) && !field.getAnnotation(sqlColumnClass).pk()) {
-                            String column = SQLDefineUtils.java2SQL(field.getAnnotation(sqlColumnClass).value(), field.getName());
-                            values.append(":").append(field.getName()).append(", ");
-                            sb.append(column).append(", ");
+                        if (SQLBuilderUtils.canBeInsert(field)) {
+                            boolean isSqlColumnAnnotationPresent = field.isAnnotationPresent(SQLColumn.class);
+                            if (SQLBuilderUtils.fieldRoutersInParamRouters(SQLBuilderUtils.getRouterInField(field), routers) && (!isSqlColumnAnnotationPresent || !field.getAnnotation(sqlColumnClass).pk())) {
+                                String column = SQLDefineUtils.java2SQL(isSqlColumnAnnotationPresent ? field.getAnnotation(sqlColumnClass).value() : "", field.getName());
+                                values.append(":").append(field.getName()).append(", ");
+                                sb.append(column).append(", ");
+                            }
                         }
                     }
                 }
@@ -284,7 +287,10 @@ public final class SQLBeanBuilder {
                                 continue;
                             }
                         }
-                        String pkColumn = SQLDefineUtils.java2SQL(field.getAnnotation(sqlColumnClass).value(), field.getName());
+                    }
+                    if (SQLBuilderUtils.canBeInsert(field)) {
+                        boolean isSqlColumnAnnotationPresent = field.isAnnotationPresent(SQLColumn.class);
+                        String pkColumn = SQLDefineUtils.java2SQL(isSqlColumnAnnotationPresent ? field.getAnnotation(sqlColumnClass).value() : "", field.getName());
                         values.append(":").append(field.getName()).append(", ");
                         sb.append(pkColumn).append(", ");
                     }
@@ -377,19 +383,21 @@ public final class SQLBeanBuilder {
             String tableName = SQLDefineUtils.java2SQL(beanClass.getAnnotation(sqlTableClass).value(), beanClass.getSimpleName());
             StringBuilder sb = new StringBuilder(updatePre).append(tableName);
             Field[] fields = SQLBuilderUtils.getAllFieldsExceptObject(beanClass);
-            if (updateRouters != null && updateRouters.length > 0) {
+            if (SQLBuilderUtils.routerIsNotEmpty(updateRouters)) {
                 sb.append(" SET ");
                 for (Field field : fields) {
-                    if (field.isAnnotationPresent(sqlColumnClass)) {
-                        if (SQLBuilderUtils.fieldRoutersInParamRouters(field.getAnnotation(sqlColumnClass).routers(), updateRouters)) {
-                            String column = SQLDefineUtils.java2SQL(field.getAnnotation(sqlColumnClass).value(), field.getName());
-                            sb.append(column).append(" = :").append(field.getName()).append(", ");
+                    if (SQLBuilderUtils.canBeUpdate(field)) {
+                        boolean isSqlColumnAnnotationPresent = field.isAnnotationPresent(sqlColumnClass);
+                        if (SQLBuilderUtils.fieldRoutersInParamRouters(SQLBuilderUtils.getRouterInField(field), updateRouters)) {
+                            String column = SQLDefineUtils.java2SQL(isSqlColumnAnnotationPresent ? field.getAnnotation(sqlColumnClass).value() : "", field.getName());
+                            String cnd = isSqlColumnAnnotationPresent ? field.getAnnotation(sqlColumnClass).condition().getCnd() : Condition.EQ.getCnd();
+                            sb.append(column).append(" ").append(cnd).append(" :").append(field.getName()).append(", ");
                         }
                     }
                 }
             } else throw new UpdateColumnNullException();
 
-            if (conditionRouters != null && conditionRouters.length > 0) {
+            if (SQLBuilderUtils.routerIsNotEmpty(conditionRouters)) {
                 sb.append(WHERE);
                 assembleWhereSQL(sb, fields, conditionRouters);
             }
@@ -428,7 +436,7 @@ public final class SQLBeanBuilder {
             StringBuilder sb = new StringBuilder(updatePre).append(tableName);
             Field[] fields = SQLBuilderUtils.getAllFieldsExceptObject(beanClass);
             String pkColumn = null, pkField = null;
-            if (updateRouters != null && updateRouters.length > 0) {
+            if (SQLBuilderUtils.routerIsNotEmpty(updateRouters)) {
                 sb.append(" SET ");
                 for (Field field : fields) {
                     if (field.isAnnotationPresent(sqlColumnClass)) {
@@ -436,9 +444,13 @@ public final class SQLBeanBuilder {
                             pkField = field.getName();
                             pkColumn = SQLDefineUtils.java2SQL(field.getAnnotation(sqlColumnClass).value(), pkField);
                         }
-                        if (SQLBuilderUtils.fieldRoutersInParamRouters(field.getAnnotation(sqlColumnClass).routers(), updateRouters)) {
-                            String column = SQLDefineUtils.java2SQL(field.getAnnotation(sqlColumnClass).value(), field.getName());
-                            sb.append(column).append(" = :").append(field.getName()).append(", ");
+                    }
+                    if (SQLBuilderUtils.canBeUpdate(field)) {
+                        boolean isSqlColumnAnnotationPresent = field.isAnnotationPresent(sqlColumnClass);
+                        if (SQLBuilderUtils.fieldRoutersInParamRouters(SQLBuilderUtils.getRouterInField(field), updateRouters)) {
+                            String column = SQLDefineUtils.java2SQL(isSqlColumnAnnotationPresent ? field.getAnnotation(sqlColumnClass).value() : "", field.getName());
+                            String cnd = isSqlColumnAnnotationPresent ? field.getAnnotation(sqlColumnClass).condition().getCnd() : Condition.EQ.getCnd();
+                            sb.append(column).append(" ").append(cnd).append(" :").append(field.getName()).append(", ");
                         }
                     }
                 }
@@ -471,7 +483,9 @@ public final class SQLBeanBuilder {
                     if (field.getAnnotation(sqlColumnClass).pk()) {
                         hasPk = true;
                         String pkColumn = SQLDefineUtils.java2SQL(field.getAnnotation(sqlColumnClass).value(), field.getName());
-                        sb.append(pkColumn).append(" = :").append(field.getName()).append(AND);
+                        boolean isSqlColumnAnnotationPresent = field.isAnnotationPresent(sqlColumnClass);
+                        String cnd = isSqlColumnAnnotationPresent ? field.getAnnotation(sqlColumnClass).condition().getCnd() : Condition.EQ.getCnd();
+                        sb.append(pkColumn).append(" ").append(cnd).append(" :").append(field.getName()).append(AND);
                     }
                 }
             }
@@ -495,7 +509,7 @@ public final class SQLBeanBuilder {
             String tableName = SQLDefineUtils.java2SQL(beanClass.getAnnotation(sqlTableClass).value(), beanClass.getSimpleName());
             StringBuilder sb = new StringBuilder(deletePre).append(tableName);
             Field[] fields = SQLBuilderUtils.getAllFieldsExceptObject(beanClass);
-            if (routers != null && routers.length > 0) {
+            if (SQLBuilderUtils.routerIsNotEmpty(routers)) {
                 sb.append(WHERE);
                 assembleWhereSQL(sb, fields, routers);
             } else throw new DeleteSQLConditionsNullException();
@@ -515,11 +529,13 @@ public final class SQLBeanBuilder {
      * @param routers
      */
     private void assembleCountSQL(StringBuilder sb, Field[] fields, String andOr, String tableName, int... routers) {
-        for (Field field : fields) {
-            if (field.isAnnotationPresent(sqlColumnClass)) {
-                if (SQLBuilderUtils.fieldRoutersInParamRouters(field.getAnnotation(sqlColumnClass).routers(), routers)) {
-                    String column = SQLDefineUtils.java2SQL(field.getAnnotation(sqlColumnClass).value(), field.getName());
-                    sb.append(andOr).append(tableName).append(".").append(column).append("= ").append(":").append(field.getName());
+        if (SQLBuilderUtils.routerIsNotEmpty(routers)) {
+            for (Field field : fields) {
+                boolean isSqlColumnAnnotationPresent = field.isAnnotationPresent(sqlColumnClass);
+                if (SQLBuilderUtils.fieldRoutersInParamRouters(SQLBuilderUtils.getRouterInField(field), routers)) {
+                    String column = SQLDefineUtils.java2SQL(isSqlColumnAnnotationPresent ? field.getAnnotation(sqlColumnClass).value() : "", field.getName());
+                    String cnd = isSqlColumnAnnotationPresent ? field.getAnnotation(SQLColumn.class).condition().getCnd() : Condition.EQ.getCnd();
+                    sb.append(andOr).append(tableName).append(".").append(column).append(" ").append(cnd).append(":").append(field.getName());
                 }
             }
         }
@@ -534,16 +550,29 @@ public final class SQLBeanBuilder {
      * @param fields
      */
     private void assembleSelectSQL(int[] selectColumnsRouters, String tableName, StringBuilder sb, Field[] fields) {
-        if (selectColumnsRouters != null && selectColumnsRouters.length > 0) {
+        if (SQLBuilderUtils.routerIsNotEmpty(selectColumnsRouters)) {
             for (Field field : fields) {
-                if (field.isAnnotationPresent(sqlColumnClass)) {
-                    if (SQLBuilderUtils.fieldRoutersInParamRouters(field.getAnnotation(sqlColumnClass).routers(), selectColumnsRouters)) {
-                        String column = SQLDefineUtils.java2SQL(field.getAnnotation(sqlColumnClass).value(), field.getName());
+                if (SQLBuilderUtils.canBeSelect(field)) {
+                    boolean isSqlColumnAnnotationPresent = field.isAnnotationPresent(sqlColumnClass);
+                    if (SQLBuilderUtils.fieldRoutersInParamRouters(SQLBuilderUtils.getRouterInField(field), selectColumnsRouters)) {
+                        String column = SQLDefineUtils.java2SQL(isSqlColumnAnnotationPresent ? field.getAnnotation(sqlColumnClass).value() : "", field.getName());
                         sb.append(tableName).append(".").append(column).append(", ");
                     }
                 }
             }
-        } else sb.append(tableName).append(".").append("*");
+        } else {
+            if (!SQLBuilderUtils.hasNoSelectField(fields)) {
+                sb.append(tableName).append(".").append("*");
+            } else {
+                for (Field field : fields) {
+                    if (SQLBuilderUtils.canBeSelect(field)) {
+                        boolean isSqlColumnAnnotationPresent = field.isAnnotationPresent(sqlColumnClass);
+                        String column = SQLDefineUtils.java2SQL(isSqlColumnAnnotationPresent ? field.getAnnotation(sqlColumnClass).value() : "", field.getName());
+                        sb.append(tableName).append(".").append(column).append(", ");
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -554,11 +583,13 @@ public final class SQLBeanBuilder {
      * @param routers
      */
     private void assembleWhereSQL(StringBuilder sb, Field[] fields, int[] routers) {
-        for (Field field : fields) {
-            if (field.isAnnotationPresent(sqlColumnClass)) {
-                if (SQLBuilderUtils.fieldRoutersInParamRouters(field.getAnnotation(sqlColumnClass).routers(), routers)) {
-                    String column = SQLDefineUtils.java2SQL(field.getAnnotation(sqlColumnClass).value(), field.getName());
-                    sb.append(column).append(" = :").append(field.getName()).append(AND);
+        if (SQLBuilderUtils.routerIsNotEmpty(routers)) {
+            for (Field field : fields) {
+                boolean isSqlColumnAnnotationPresent = field.isAnnotationPresent(sqlColumnClass);
+                if (SQLBuilderUtils.fieldRoutersInParamRouters(SQLBuilderUtils.getRouterInField(field), routers)) {
+                    String column = SQLDefineUtils.java2SQL(isSqlColumnAnnotationPresent ? field.getAnnotation(sqlColumnClass).value() : "", field.getName());
+                    String cnd = isSqlColumnAnnotationPresent ? field.getAnnotation(SQLColumn.class).condition().getCnd() : Condition.EQ.getCnd();
+                    sb.append(column).append(" ").append(cnd).append(" :").append(field.getName()).append(AND);
                 }
             }
         }

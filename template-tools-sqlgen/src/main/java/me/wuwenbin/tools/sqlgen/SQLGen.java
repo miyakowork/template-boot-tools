@@ -2,7 +2,7 @@ package me.wuwenbin.tools.sqlgen;
 
 
 import me.wuwenbin.tools.sqlgen.factory.SQLBeanBuilder;
-import me.wuwenbin.tools.sqlgen.factory.SQLStrBuilder;
+import me.wuwenbin.tools.sqlgen.factory.SQLTextBuilder;
 
 /**
  * 使用入口方法
@@ -11,12 +11,12 @@ import me.wuwenbin.tools.sqlgen.factory.SQLStrBuilder;
  * @author wuwenbin
  * @since 1.1.0
  */
-public final class SqlGen {
+public final class SQLGen {
 
     private volatile static SQLBeanBuilder sqlBeanBuilder;
-    private volatile static SQLStrBuilder sqlStrBuilder;
+    private volatile static SQLTextBuilder sqlTextBuilder;
 
-    private SqlGen() {
+    private SQLGen() {
     }
 
     /**
@@ -39,19 +39,19 @@ public final class SqlGen {
     }
 
     /**
-     * 生成 {@link SQLStrBuilder} instance
+     * 生成 {@link SQLTextBuilder} instance
      *
-     * @return {@link SQLStrBuilder}
+     * @return {@link SQLTextBuilder}
      */
-    public static SQLStrBuilder builder() {
-        if (sqlStrBuilder == null) {
-            synchronized (SQLStrBuilder.class) {
-                if (sqlStrBuilder == null) {
-                    sqlStrBuilder = new SQLStrBuilder();
+    public static SQLTextBuilder builder() {
+        if (sqlTextBuilder == null) {
+            synchronized (SQLTextBuilder.class) {
+                if (sqlTextBuilder == null) {
+                    sqlTextBuilder = new SQLTextBuilder();
                 }
             }
         }
-        return sqlStrBuilder;
+        return sqlTextBuilder;
     }
 
 }

@@ -14,7 +14,7 @@ import me.wuwenbin.tools.sqlgen.util.SQLBuilderUtils;
  * @author wuwenbin
  * @since 1.1.0
  */
-public class SQLStrBuilder {
+public class SQLTextBuilder {
 
 
     private final String SPACE = " ";

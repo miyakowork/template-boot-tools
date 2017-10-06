@@ -1,7 +1,12 @@
 package me.wuwenbin.tools.sqlgen.util;
 
 
+import me.wuwenbin.tools.sqlgen.annotation.SQLColumn;
 import me.wuwenbin.tools.sqlgen.annotation.SQLTable;
+import me.wuwenbin.tools.sqlgen.annotation.not.NotInsert;
+import me.wuwenbin.tools.sqlgen.annotation.not.NotSelect;
+import me.wuwenbin.tools.sqlgen.annotation.not.NotUpdate;
+import me.wuwenbin.tools.sqlgen.constant.Router;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -91,5 +96,105 @@ public class SQLBuilderUtils {
             newField[i] = field;
         }
         return newField;
+    }
+
+    /**
+     * routers条件判断是否为不为空
+     *
+     * @param routers
+     * @return
+     */
+    public static boolean routerIsNotEmpty(int... routers) {
+        return routers != null && routers.length > 0;
+    }
+
+    /**
+     * 判断类中属性字段是否有含有不能select的
+     *
+     * @param fields
+     * @return
+     */
+    public static boolean hasNoSelectField(Field[] fields) {
+        for (Field field : fields) {
+            if (!canBeSelect(field)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 判断类中属性字段是否有含有不能insert的
+     *
+     * @param fields
+     * @return
+     */
+    public static boolean hasNoInsertField(Field[] fields) {
+        for (Field field : fields) {
+            if (!canBeInsert(field)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 判断类中属性字段是否有含有不能update的
+     *
+     * @param fields
+     * @return
+     */
+    public static boolean hasNoUpdateField(Field[] fields) {
+        for (Field field : fields) {
+            if (!canBeUpdate(field)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 判断当前列是否可以被select
+     *
+     * @param field
+     * @return
+     */
+    public static boolean canBeSelect(Field field) {
+        return !field.isAnnotationPresent(NotSelect.class) && (!field.isAnnotationPresent(SQLColumn.class) || field.getAnnotation(SQLColumn.class).select());
+    }
+
+    /**
+     * 判断当前列是否可以被insert
+     *
+     * @param field
+     * @return
+     */
+    public static boolean canBeInsert(Field field) {
+        return !field.isAnnotationPresent(NotInsert.class) && (!field.isAnnotationPresent(SQLColumn.class) || field.getAnnotation(SQLColumn.class).insert());
+    }
+
+    /**
+     * 判断当前列是否可以被update
+     *
+     * @param field
+     * @return
+     */
+    public static boolean canBeUpdate(Field field) {
+        return !field.isAnnotationPresent(NotUpdate.class) && (!field.isAnnotationPresent(SQLColumn.class) || field.getAnnotation(SQLColumn.class).update());
+    }
+
+
+    /**
+     * 获取当前列上的router集合
+     * 有注解并且有声明router的话，返回此字段，没有则是返回默认的
+     *
+     * @param field
+     * @return
+     */
+    public static int[] getRouterInField(Field field) {
+        if (field.isAnnotationPresent(SQLColumn.class)) {
+            return field.getAnnotation(SQLColumn.class).routers();
+        } else
+            return new int[]{Router.DEFAULT};
     }
 }

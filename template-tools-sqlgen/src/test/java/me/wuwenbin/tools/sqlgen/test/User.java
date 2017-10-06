@@ -3,6 +3,7 @@ package me.wuwenbin.tools.sqlgen.test;
 
 import me.wuwenbin.tools.sqlgen.annotation.SQLColumn;
 import me.wuwenbin.tools.sqlgen.annotation.SQLTable;
+import me.wuwenbin.tools.sqlgen.annotation.not.NotSelect;
 import me.wuwenbin.tools.sqlgen.constant.Router;
 
 /**
@@ -14,14 +15,19 @@ public class User extends Person {
     @SQLColumn(pk = true)
     private Integer id;
 
-    @SQLColumn(routers = 100)
+    @SQLColumn(routers = Router.B, update = false)
     private String username;
 
     @SQLColumn(routers = Router.B)
+    @NotSelect
     private String password;
 
     @SQLColumn(routers = Router.C)
     private String cnName;
+
+    private String email;
+
+    private String deptName;
 
 
     public Integer getId() {
@@ -54,5 +60,21 @@ public class User extends Person {
 
     public void setCnName(String cnName) {
         this.cnName = cnName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getDeptName() {
+        return deptName;
+    }
+
+    public void setDeptName(String deptName) {
+        this.deptName = deptName;
     }
 }
