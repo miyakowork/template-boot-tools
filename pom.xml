@@ -6,7 +6,7 @@
 
     <groupId>me.wuwenbin</groupId>
     <artifactId>template-boot-tools</artifactId>
-    <version>1.0.2.RELEASE</version>
+    <version>1.1.0.RELEASE</version>
     <modules>
         <module>template-tools-sqlgen</module>
         <module>template-tools-encrypt</module>
