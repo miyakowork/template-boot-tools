@@ -3,6 +3,7 @@ package me.wuwenbin.tools.sqlgen.test;
 
 import me.wuwenbin.tools.sqlgen.annotation.SQLColumn;
 import me.wuwenbin.tools.sqlgen.annotation.SQLTable;
+import me.wuwenbin.tools.sqlgen.annotation.not.NotInsert;
 import me.wuwenbin.tools.sqlgen.annotation.not.NotSelect;
 import me.wuwenbin.tools.sqlgen.constant.Router;
 
@@ -25,6 +26,7 @@ public class User extends Person {
     @SQLColumn(routers = Router.C)
     private String cnName;
 
+    @NotInsert
     private String email;
 
     private String deptName;

@@ -2,6 +2,7 @@ package me.wuwenbin.tools.sqlgen.annotation.support;
 
 /**
  * created by Wuwenbin on 2017/10/4 at 18:39
+ * @author wuwen
  */
 public enum Condition {
 

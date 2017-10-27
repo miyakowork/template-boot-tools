@@ -1,6 +1,7 @@
 package me.wuwenbin.tools.sqlgen.util;
 
 
+import me.wuwenbin.tools.sqlgen.annotation.MappedSuper;
 import me.wuwenbin.tools.sqlgen.annotation.SQLColumn;
 import me.wuwenbin.tools.sqlgen.annotation.SQLTable;
 import me.wuwenbin.tools.sqlgen.annotation.not.NotInsert;
@@ -25,6 +26,11 @@ public class SQLBuilderUtils {
     private static final String SINGLE_SPACE = " ";
     private static final String DOUBLE_SPACE = "  ";
 
+    private static final String AND = "AND";
+    private static final String ANDSPACE = "AND ";
+    private static final String COMMA = ",";
+    private static final String COMMASPACE = ", ";
+
     /**
      * 最后生成sql时候,做一些字符串处理
      *
@@ -36,14 +42,18 @@ public class SQLBuilderUtils {
         sql = sql.replace(", WHERE ", " WHERE ").replace(",  WHERE ", " WHERE ");
         sql = sql.replace(", )", ")");
         sql = sql.replace(DOUBLE_SPACE, SINGLE_SPACE);
-        if (sql.endsWith("AND"))
+        if (sql.endsWith(AND)) {
             sql = sql.substring(0, sql.length() - 3);
-        if (sql.endsWith("AND "))
+        }
+        if (sql.endsWith(ANDSPACE)) {
             sql = sql.substring(0, sql.length() - 4);
-        if (sql.endsWith(","))
+        }
+        if (sql.endsWith(COMMA)) {
             sql = sql.substring(0, sql.length() - 1);
-        if (sql.endsWith(", "))
+        }
+        if (sql.endsWith(COMMASPACE)) {
             sql = sql.substring(0, sql.length() - 2);
+        }
         return sql;
     }
 
@@ -71,8 +81,9 @@ public class SQLBuilderUtils {
         }
 
         for (int filedRouter : filedRouters) {
-            if (paramRouterList.contains(filedRouter))
+            if (paramRouterList.contains(filedRouter)) {
                 return true;
+            }
         }
         return false;
     }
@@ -89,6 +100,9 @@ public class SQLBuilderUtils {
         while (tempClass != Object.class) {
             fields.addAll(Arrays.asList(tempClass.getDeclaredFields()));
             tempClass = tempClass.getSuperclass();
+            if (!isMappedSuperClass(tempClass)) {
+                break;
+            }
         }
         Field[] newField = new Field[fields.size()];
         for (int i = 0; i < fields.size(); i++) {
@@ -106,6 +120,16 @@ public class SQLBuilderUtils {
      */
     public static boolean routerIsNotEmpty(int... routers) {
         return routers != null && routers.length > 0;
+    }
+
+    /**
+     * 判断是否需要把父类的字段也一起囊括
+     *
+     * @param clazz
+     * @return
+     */
+    private static boolean isMappedSuperClass(Class<?> clazz) {
+        return clazz.isAnnotationPresent(MappedSuper.class) && clazz.getAnnotation(MappedSuper.class).value();
     }
 
     /**
@@ -194,7 +218,8 @@ public class SQLBuilderUtils {
     public static int[] getRouterInField(Field field) {
         if (field.isAnnotationPresent(SQLColumn.class)) {
             return field.getAnnotation(SQLColumn.class).routers();
-        } else
+        } else {
             return new int[]{Router.DEFAULT};
+        }
     }
 }
