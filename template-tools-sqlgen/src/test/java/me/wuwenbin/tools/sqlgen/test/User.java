@@ -14,7 +14,7 @@ import me.wuwenbin.tools.sqlgen.constant.Router;
 public class User extends Person {
 
     @SQLColumn(pk = true)
-    private Integer id;
+    private Long id;
 
     @SQLColumn(routers = Router.B, update = false)
     private String username;
@@ -29,14 +29,15 @@ public class User extends Person {
     @NotInsert
     private String email;
 
-    private String deptName;
+    private Long deptId;
+    private Long roleId;
 
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -72,11 +73,19 @@ public class User extends Person {
         this.email = email;
     }
 
-    public String getDeptName() {
-        return deptName;
+    public Long getDeptId() {
+        return deptId;
     }
 
-    public void setDeptName(String deptName) {
-        this.deptName = deptName;
+    public void setDeptId(Long deptId) {
+        this.deptId = deptId;
+    }
+
+    public Long getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId(Long roleId) {
+        this.roleId = roleId;
     }
 }
