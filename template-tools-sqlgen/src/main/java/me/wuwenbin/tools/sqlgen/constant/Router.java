@@ -20,4 +20,23 @@ public interface Router {
     int E = Integer.MIN_VALUE + 'e';
     int F = Integer.MIN_VALUE + 'f';
     int G = Integer.MIN_VALUE + 'g';
+    int H = Integer.MIN_VALUE + 'h';
+    int I = Integer.MIN_VALUE + 'i';
+    int J = Integer.MIN_VALUE + 'j';
+    int K = Integer.MIN_VALUE + 'k';
+    int L = Integer.MIN_VALUE + 'l';
+    int M = Integer.MIN_VALUE + 'm';
+    int N = Integer.MIN_VALUE + 'n';
+    int O = Integer.MIN_VALUE + 'o';
+    int P = Integer.MIN_VALUE + 'p';
+    int Q = Integer.MIN_VALUE + 'q';
+    int R = Integer.MIN_VALUE + 'r';
+    int S = Integer.MIN_VALUE + 's';
+    int T = Integer.MIN_VALUE + 't';
+    int U = Integer.MIN_VALUE + 'u';
+    int V = Integer.MIN_VALUE + 'v';
+    int W = Integer.MIN_VALUE + 'w';
+    int X = Integer.MIN_VALUE + 'x';
+    int Y = Integer.MIN_VALUE + 'y';
+    int Z = Integer.MIN_VALUE + 'z';
 }
