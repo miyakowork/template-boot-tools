@@ -3,12 +3,11 @@
     <parent>
         <artifactId>template-boot-tools</artifactId>
         <groupId>me.wuwenbin</groupId>
-        <version>1.0.2.RELEASE</version>
+        <version>1.2.0.RELEASE</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>template-tools-util</artifactId>
-    <version>1.0.3.RELEASE</version>
     <packaging>jar</packaging>
 
     <name>template-tools-util</name>
